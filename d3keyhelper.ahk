@@ -1,17 +1,17 @@
 ﻿; =================================================================
-;                  暗黑3 “老沙”按键助手  (MIT License)
+;                  디아블로 3 "오래된 모래" 버튼 어시스턴트  (MIT License)
 ; Designed by Oldsand
-; 转载请注明原作者
+; Please indicate the original author when reprinting
 ; 
 ; 
-; 查看最新更新：https://github.com/WeijieH/D3keyHelper
-; 欢迎提交bug，PR
+; Check out the latest updates:https://github.com/WeijieH/D3keyHelper
+; Submissions welcome bug, PR
 ; =================================================================
 
 ;@Ahk2Exe-IgnoreBegin
 AHK_MIN_VERSION:="1.1.33.00"
 if (A_AhkVersion < AHK_MIN_VERSION)
-    MsgBox, 0x40, 若遇到错误请升级AHK软件！, % Format("本按键助手基于AHK v{:s}开发。`n你的AHK版本为：v{:s}。", AHK_MIN_VERSION, A_AhkVersion)
+    MsgBox, 0x40, 오류가 발생하면 AHK 소프트웨어를 업그레이드하십시오!, % Format("This button assistant is based on AHK v{:s}develop.`n귀하의 AHK 버전 : v{:s}.", AHK_MIN_VERSION, A_AhkVersion)
 ;@Ahk2Exe-IgnoreEnd
 
 #SingleInstance Force
@@ -35,11 +35,11 @@ TitleBarHight:=25
 ;@Ahk2Exe-Obey U_D, U_D := A_DD
 ;@Ahk2Exe-SetFileVersion 1.4.%U_Y%.%U_M%%U_D%
 ;@Ahk2Exe-SetLanguage 0x0804
-;@Ahk2Exe-SetDescription 暗黑3技能连点器
+;@Ahk2Exe-SetDescription 디아블로 3 스킬 커넥터
 ;@Ahk2Exe-SetProductName D3keyHelper
 ;@Ahk2Exe-SetCopyright Oldsand
 ;@Ahk2Exe-Bin Unicode 64-bit.bin
-; ========================================来自配置文件的全局变量===================================================
+; ======================================== 구성 파일의 전역 변수 ===================================================
 currentProfile:=ReadCfgFile("d3oldsand.ini", tabs, combats, others, generals)
 SendMode, % generals.sendmode
 tabsarray:=StrSplit(tabs, "`|")
@@ -49,7 +49,7 @@ isCompact:= generals.compactmode
 runOnStart:= generals.runonstart
 d3only:= generals.d3only
 maxreforge:= (generals.maxreforge)?generals.maxreforge:10
-TitleString:=(d3only)? "暗黑3技能连点器":"鼠标键盘连点器"
+TitleString:=(d3only)? "디아블로 3 스킬 커넥터":"마우스 키보드 커넥터"
 TITLE:=Format(TitleString " v1.4.{:d}   by Oldsand", VERSION)
 helperMouseSpeed:= generals.helpermousespeed
 helperAnimationDelay:= generals.helperanimationdelay
@@ -75,17 +75,17 @@ Return
 
 ; =================================== User Functions =====================================
 /*
-在程序载入时执行的一些初始化
-参数：
-    无
-返回：
-    无
+프로그램이 로드될 때 수행되는 일부 초기화
+매개변수:
+    없음
+리턴:
+    없음
 */
 OnLoad(){
     Global
-    Static Init := OnLoad() ; 在所有语句之前运行
+    Static Init := OnLoad() ; 모든 명령문보다 먼저 실행
 
-    ; ============================================全局变量===========================================================
+    ; ============================================ 전역 변수 ===========================================================
     vRunning:=False
     vPausing:=False
     vFront:=True
@@ -126,10 +126,10 @@ OnLoad(){
 }
 
 /*
-在程序退出时执行的清理工作
-参数：
+프로그램 종료 시 수행되는 정리 작업
+参数:
     无
-返回：
+返回:
     无
 */
 OnUnload(ExitReason, ExitCode){
@@ -143,10 +143,10 @@ OnUnload(ExitReason, ExitCode){
 }
 
 /*
-创建图形界面
-参数：
+그래픽 인터페이스 만들기
+参数:
     无
-返回：
+返回:
     无
 */
 GuiCreate(){
@@ -169,25 +169,25 @@ GuiCreate(){
     Gui, Add, Picture, % "x" MainWindowW-1 " y1 w1 h" MainWindowH-2 " +0x4E hwndBorderRightID vBorderRight"
     Gui, Add, Text, % "x1 y1 h" TitleBarHight " hwndTitleBarTextID vTitleBarText +BackgroundTrans +0x200", %TITLE%
     Gui, Add, Picture, % "x" MainWindowW-31 " y1 w-1 h" TitleBarHight " hwndUIRightButtonID vUIRightButton gdummyFunction +BackgroundTrans", % "HBITMAP:*" hBMPButtonClose_Normal
-    AddToolTip(UIRightButtonID, "左键：保存设置并最小化窗口至右下角`n右键：保存设置并退出程序")
+    AddToolTip(UIRightButtonID, "왼쪽버튼으로 클릭: 설정을 저장하고 창을 오른쪽 하단으로 최소화합니다.`n오른쪽 버튼으로 클릭: 설정 저장 및 프로그램 종료")
     Gui, Add, Picture, % "x" 1 " y1 w-1 h" TitleBarHight " hwndUILeftButtonID vUILeftButton gdummyFunction +BackgroundTrans", % "HBITMAP:*" hBMPButtonLeft_Normal
-    AddToolTip(UILeftButtonID, "点击以在完整，紧凑布局中切换")
+    AddToolTip(UILeftButtonID, "클릭하여 컴팩트모드로 전환")
     GuiControlGet, TitleBarSize, Pos , TitleBarText
     Gui Add, Tab3, xm ym w%tabw% h%tabh% vActiveTab gSetTabFocus AltSubmit, %tabs%
     Gui Font, s9, Segoe UI
-    local skillLabels:=["技能一：", "技能二：", "技能三：", "技能四：", "左键技能：", "右键技能："]
+    local skillLabels:=["기술 1:", "기술 2:", "기술 3:", "기술 4:", "왼쪽:", "오른쪽:"]
     Loop, parse, tabs, `|
     {
         local currentTab:=A_Index
         Gui Tab, %currentTab%
         Gui Add, Hotkey, x0 y0 w0 w0
         
-        Gui Add, GroupBox, xm+10 ym+40 w520 h260 section, 按键宏设置
-        Gui Add, Text, xs+90 ys+20 w60 center section, 快捷键
-        Gui Add, Text, x+10 w80 center, 策略
-        Gui Add, Text, x+15 w110 center, 执行间隔（毫秒）
-        Gui Add, Text, x+5 w90 center, 延迟（毫秒）
-        Gui Add, Text, x+0 center, 延迟随机
+        Gui Add, GroupBox, xm+10 ym+40 w520 h260 section, 주요 매크로 설정
+        Gui Add, Text, xs+90 ys+20 w60 center section, 단축키
+        Gui Add, Text, x+10 w80 center, 전략
+        Gui Add, Text, x+15 w110 center, 실행 간격(ms)
+        Gui Add, Text, x+5 w90 center, 지연(ms)
+        Gui Add, Text, x+0 center, 지연 랜덤
         Loop, 6
         {
             Gui Add, Text, xs-75 w70 yp+34 center, % skillLabels[A_Index]
@@ -202,47 +202,48 @@ GuiCreate(){
                 case 6:
                     Gui Add, Edit, x+5 yp-2 w60 vskillset%currentTab%s%A_Index%hotkey +Disabled, RButton
             }
-            Gui Add, DropDownList, x+10 w80 AltSubmit Choose%ac% gSetSkillsetDropdown vskillset%currentTab%s%A_Index%dropdown, 禁用||按住不放||连点||保持Buff
+            Gui Add, DropDownList, x+10 w80 AltSubmit Choose%ac% gSetSkillsetDropdown vskillset%currentTab%s%A_Index%dropdown, 비활성화||HOLD||반복클릭||버프유지
             Gui Add, Edit, vskillset%currentTab%s%A_Index%edit x+20 w90 Number
             Gui Add, Updown, vskillset%currentTab%s%A_Index%updown gSetSkillQueueWarning Range20-60000, % combats[currentTab][A_Index]["interval"]
             Gui Add, Edit, vskillset%currentTab%s%A_Index%delayedit hwndskillset%currentTab%s%A_Index%delayeditID x+25 w70
             Gui Add, Updown, vskillset%currentTab%s%A_Index%delayupdown Range-30000-30000, % combats[currentTab][A_Index]["delay"]
-            AddToolTip(skillset%currentTab%s%A_Index%delayeditID, "正数代表策略延后执行，负数代表策略提前执行，设为0可以关闭延迟")
+            AddToolTip(skillset%currentTab%s%A_Index%delayeditID, "양수는 전략 실행이 지연됨을 의미합니다, 음수는 전략이 미리 실행됨을 의미합니다., 지연을 끄려면 0으로 설정하십시오.")
             Gui Add, Checkbox, x+35 yp+2 Checked%rd% vskillset%currentTab%s%A_Index%randomckbox hwndskillset%currentTab%s%A_Index%randomckboxID
-            AddToolTip(skillset%currentTab%s%A_Index%randomckboxID, "勾选后，每次策略执行时的实际延迟为0至设置值之间的随机数")
+            AddToolTip(skillset%currentTab%s%A_Index%randomckboxID, "체크 시, 각 전략 실행의 실제 지연은 0과 설정 값 사이의 임의의 숫자입니다.")
         }
-        Gui Add, GroupBox, xm+10 yp+45 w520 h170 section, 额外设置
-        Gui Add, Text, xs+20 ys+30, 快速切换至本配置：
-        Gui Add, DropDownList, % "x+5 yp-3 w90 AltSubmit Choose" others[currentTab].profilemethod " vskillset" currentTab "profilekeybindingdropdown gSetProfileKeybinding", 无||鼠标中键||滚轮向上||滚轮向下||侧键1||侧键2||键盘按键
+        Gui Add, GroupBox, xm+10 yp+45 w520 h170 section, 추가 설정
+        Gui Add, Text, xs+20 ys+30, 전환 키 설정: ; 이 구성으로 빠르게 전환:
+        Gui Add, DropDownList, % "x+5 yp-3 w90 AltSubmit Choose" others[currentTab].profilemethod " vskillset" currentTab "profilekeybindingdropdown gSetProfileKeybinding", 없음||마우스 가운데 버튼||위로 스크롤||아래로 스크롤||사이드 키 1||사이드 키 2||키보드 키
         Gui Add, Hotkey, x+15 w100 vskillset%currentTab%profilekeybindinghkbox gSetProfileKeybinding, % others[currentTab].profilehotkey
-        Gui Add, Checkbox, % "x+15 yp+3 Checked" others[currentTab].autostartmarco " vskillset" currentTab "autostartmarcockbox hwndskillset" currentTab "autostartmarcockboxID", 切换后自动启动宏
-        AddToolTip(skillset%currentTab%autostartmarcockboxID, "开启后，以懒人模式启动的战斗宏可以在运行中无缝切换")
+        Gui Add, Checkbox, % "x+15 yp+3 Checked" others[currentTab].autostartmarco " vskillset" currentTab "autostartmarcockbox hwndskillset" currentTab "autostartmarcockboxID", 클릭 후 자동 시작 매크로
+        AddToolTip(skillset%currentTab%autostartmarcockboxID, "활성화하면, 지연 모드에서 시작된 전투 매크로가 즉시 원활하게 전환될 수 있습니다.")
 
-        Gui Add, Text, xs+20 yp+37, 走位辅助：
-        Gui Add, DropDownList, % "x+5 yp-3 w150 AltSubmit Choose" pfmv:=others[currentTab].movingmethod " vskillset" currentTab "movingdropdown gSetMovingHelper", 无||强制站立||强制走位（按住不放）||强制走位（连点）
-        Gui Add, Text, vskillset%currentTab%movingtext x+10 yp+3, 间隔（毫秒）：
+        Gui Add, Text, xs+20 yp+37, 걷기 보조:
+        Gui Add, DropDownList, % "x+5 yp-3 w150 AltSubmit Choose" pfmv:=others[currentTab].movingmethod " vskillset" currentTab "movingdropdown gSetMovingHelper", 없음||강제 정지||강제 이동(HOLD)||필수 이동(반복클릭)
+        Gui Add, Text, vskillset%currentTab%movingtext x+10 yp+3, 간격(ms):
         Gui Add, Edit, vskillset%currentTab%movingedit x+5 yp-3 w60 Number
         Gui Add, Updown, vskillset%currentTab%movingupdown Range20-3000, % others[currentTab].movinginterval
 
-        Gui Add, Text, xs+20 yp+40, 宏启动方式：
-        Gui Add, DropDownList, % "x+5 yp-3 w90 AltSubmit Choose" others[currentTab].lazymode " hwndprofileStartModeDropdown" currentTab "ID vskillset" currentTab "profilestartmodedropdown gSetStartMode", 懒人模式||仅按下时||仅按一次
-        AddToolTip(profileStartModeDropdown%currentTab%ID, "懒人模式：按下战斗宏快捷键时开启宏，再按一下关闭宏`n仅按下时：仅在战斗宏快捷键被压下时启动宏`n仅按一次：按下战斗宏快捷键即按下所有“按住不放”的技能键一次")
-        Gui Add, Checkbox, % "x+20 yp+3 Checked" others[currentTab].useskillqueue " hwnduseskillqueueckbox" currentTab "ID vskillset" currentTab "useskillqueueckbox gSetSkillQueue", 使用单线程按键队列（毫秒）：
-        AddToolTip(useskillqueueckbox%currentTab%ID, "开启后按键不会被立刻按下而是存储至一个按键队列中`n连点会使技能加入队列头部，保持buff会使技能加入队列尾部`n并且连点时会自动按下强制站立")
+        Gui Add, Text, xs+20 yp+40, 매크로 시작 방법:
+        Gui Add, DropDownList, % "x+5 yp-3 w90 AltSubmit Choose" others[currentTab].lazymode " hwndprofileStartModeDropdown" currentTab "ID vskillset" currentTab "profilestartmodedropdown gSetStartMode", 게으른 모드||누를 때만||한 번만 누르기
+        AddToolTip(profileStartModeDropdown%currentTab%ID, "게으른 모드: 전투 매크로 단축키를 눌러 매크로를 열고 다시 눌러 매크로를 닫습니다.`n누를 때만: 전투 매크로 단축키를 누를 때만 매크로를 시작합니다.`n한 번만 누르기: 전투 매크로 단축키를 눌러 모든 'Hold and Hold' 스킬 키를 한 번 누릅니다.")
+        Gui Add, Checkbox, % "x+20 yp+3 Checked" others[currentTab].useskillqueue " hwnduseskillqueueckbox" currentTab "ID vskillset" currentTab "useskillqueueckbox gSetSkillQueue", 단일 스레드 키 큐 사용(ms):
+        ; 开启后按键不会被立刻按下而是存储至一个按键队列中. 连点会使技能加入队列头部, 保持buff会使技能加入队列尾部. 并且连点时会自动按下强制站立
+        AddToolTip(useskillqueueckbox%currentTab%ID, "개봉 후 버튼은 바로 누르지 않고 버튼 대기열에 저장됩니다.`n포인트를 연결하면 대기열 맨 앞에 스킬이 추가되고, 버프를 유지하면 대기열 맨 뒤에 스킬이 추가됩니다.`n포인트를 연결할 때 자동으로 눌러 강제로 서 있습니다.")
         Gui Add, Edit, vskillset%currentTab%useskillqueueedit hwnduseskillqueueedit%currentTab%ID x+0 yp-3 w50 Number
         Gui Add, Updown, vskillset%currentTab%useskillqueueupdown gSetSkillQueueWarning Range50-1000, % others[currentTab].useskillqueueinterval
-        AddToolTip(useskillqueueedit%currentTab%ID, "按键队列中的连点按键会以此间隔一一发送至游戏窗口")
-        Gui Add, Text, x+8  yp+3 vskillset%currentTab%skillqueuewarningtext hwndskillset%currentTab%skillqueuewarningtextID gdummyFunction +cRed +Hidden, % "注意！"
-        AddToolTip(skillset%currentTab%skillqueuewarningtextID, "按键队列功能设置有误")
+        AddToolTip(useskillqueueedit%currentTab%ID, "키 대기열에 연결된 키는 이 간격으로 하나씩 게임 창으로 전송됩니다.")
+        Gui Add, Text, x+8  yp+3 vskillset%currentTab%skillqueuewarningtext hwndskillset%currentTab%skillqueuewarningtextID gdummyFunction +cRed +Hidden, % "Notice!"
+        AddToolTip(skillset%currentTab%skillqueuewarningtextID, "버튼 대기열 기능이 잘못 설정되었습니다.")
 
-        Gui Add, Checkbox, % "xs+20 yp+37 Checked" others[currentTab].enablequickpause " vskillset" currentTab "clickpauseckbox gSetQuickPause", 快速暂停：
-        Gui Add, DropDownList, % "x+0 yp-3 w50 AltSubmit Choose" others[currentTab].quickpausemethod1 " vskillset" currentTab "clickpausedropdown1 gSetQuickPause", 双击||单击||压住
-        Gui Add, DropDownList, % "x+5 yp w75 AltSubmit Choose" others[currentTab].quickpausemethod2 " vskillset" currentTab "clickpausedropdown2 gSetQuickPause", 鼠标左键||鼠标右键||鼠标中键||侧键1||侧键2
-        Gui Add, Text, x+5 yp+3 vskillset%currentTab%clickpausetext1, 则
-        Gui Add, DropDownList, % "x+5 yp-3 w140 AltSubmit Choose" others[currentTab].quickpausemethod3 " vskillset" currentTab "clickpausedropdown3", 暂停按键宏||暂停宏且连点左键
+        Gui Add, Checkbox, % "xs+20 yp+37 Checked" others[currentTab].enablequickpause " vskillset" currentTab "clickpauseckbox gSetQuickPause", 빠른 일시 중지:
+        Gui Add, DropDownList, % "x+0 yp-3 w50 AltSubmit Choose" others[currentTab].quickpausemethod1 " vskillset" currentTab "clickpausedropdown1 gSetQuickPause", 더블 클릭||클릭||HOLD
+        Gui Add, DropDownList, % "x+5 yp w75 AltSubmit Choose" others[currentTab].quickpausemethod2 " vskillset" currentTab "clickpausedropdown2 gSetQuickPause", 마우스 왼쪽 버튼||마우스 오른쪽 버튼||마우스 가운데 버튼||사이드 키 1||사이드 키 2
+        Gui Add, Text, x+5 yp+3 vskillset%currentTab%clickpausetext1, but
+        Gui Add, DropDownList, % "x+5 yp-3 w140 AltSubmit Choose" others[currentTab].quickpausemethod3 " vskillset" currentTab "clickpausedropdown3", 일시 중지 버튼 매크로||매크로를 일시 중지하고 마우스 왼쪽 버튼을 클릭합니다.
         Gui Add, Edit, vskillset%currentTab%clickpauseedit x+5 yp w60 Number
         Gui Add, Updown, vskillset%currentTab%clickpauseupdown Range500-5000, % others[currentTab].quickpausedelay
-        Gui Add, Text, x+5 yp+3 vskillset%currentTab%clickpausetext2, 毫秒
+        Gui Add, Text, x+5 yp+3 vskillset%currentTab%clickpausetext2, ms
     }
     Gui Tab
     GuiControl, Choose, ActiveTab, % currentProfile
@@ -250,87 +251,87 @@ GuiCreate(){
     Gui Add, GroupBox, x%helperSettingGroupx% ym+40 w338 h450 section, 辅助功能
     oldsandhelperhk:=generals.oldsandhelperhk
     Gui Font,s10
-    Gui Add, Text, xs+20 ys+30 +cRed, 助手宏启动快捷键：
+    Gui Add, Text, xs+20 ys+30 +cRed, 助手宏启动快捷键:
     Gui Font,s9
-    Gui Add, DropDownList, % "x+0 yp-3 w75 vhelperKeybindingdropdown gSetHelperKeybinding AltSubmit Choose" generals.oldsandhelpermethod, 无||鼠标中键||滚轮向上||滚轮向下||侧键1||侧键2||键盘按键
+    Gui Add, DropDownList, % "x+0 yp-3 w75 vhelperKeybindingdropdown gSetHelperKeybinding AltSubmit Choose" generals.oldsandhelpermethod, 없음||鼠标中键||滚轮向上||滚轮向下||侧键1||侧键2||键盘按键
     Gui Add, Hotkey, x+5 w70 vhelperKeybindingHK gSetHelperKeybinding, %oldsandhelperhk%
 
-    Gui Add, Text, xs+20 yp+40 hwndhelperSpeedTextID gdummyFunction, 助手宏动画速度：
-    AddToolTip(helperSpeedTextID, "当网络延迟较高时，适当降低动画速度可以减少宏出错的概率")
+    Gui Add, Text, xs+20 yp+40 hwndhelperSpeedTextID gdummyFunction, 助手宏动画速度:
+    AddToolTip(helperSpeedTextID, "当网络延迟较高时, 适当降低动画速度可以减少宏出错的概率")
     Gui Add, DropDownList, % "x+5 yp-3 w90 vhelperAnimationSpeedDropdown hwndhelperAnimationSpeedDropdownID AltSubmit Choose" generals.helperspeed, 非常快||快速||中等||慢速||自定义
-    AddToolTip(helperAnimationSpeedDropdownID, "非常快：鼠标速度0，动画延迟50`n快速：鼠标速度1，动画延迟100`n中等：鼠标速度2，动画延迟150`n慢速：鼠标速度3，动画延迟200`n自定义：使用配置文件中的预设值")
+    AddToolTip(helperAnimationSpeedDropdownID, "非常快:鼠标速度0, 动画延迟50`n快速:鼠标速度1, 动画延迟100`n中等:鼠标速度2, 动画延迟150`n慢速:鼠标速度3, 动画延迟200`n自定义:使用配置文件中的预设值")
 
     Gui Add, Text, x+20 yp+4 w80 hwndhelperSafeZoneTextID vhelperSafeZoneText gdummyFunction
-    AddToolTip(helperSafeZoneTextID, "修改配置文件中Generals区块下的safezone值来设置安全格`n格式为英文逗号连接的格子编号`n左上角格子编号为1，右上角为10，左下角为51，右下角为60")
+    AddToolTip(helperSafeZoneTextID, "修改配置文件中Generals区块下的safezone值来设置安全格`n格式为英文逗号连接的格子编号`n左上角格子编号为1, 右上角为10, 左下角为51, 右下角为60")
 
-    Gui Add, CheckBox, % "xs+20 yp+35 hwndextraGambleHelperCKboxID vextraGambleHelperCKbox gSetGambleHelper Checked" generals.enablegamblehelper, 血岩赌博助手：
+    Gui Add, CheckBox, % "xs+20 yp+35 hwndextraGambleHelperCKboxID vextraGambleHelperCKbox gSetGambleHelper Checked" generals.enablegamblehelper, 血岩赌博助手:
     AddToolTip(extraGambleHelperCKboxID, "赌博时按下助手快捷键可以自动点击右键")
     Gui Add, Text, vextraGambleHelperText x+5 yp, 发送右键次数
     Gui Add, Edit, vextraGambleHelperEdit x+10 yp-4 w60 Number
     Gui Add, Updown, vextraGambleHelperUpdown Range2-60, % generals.gamblehelpertimes
 
-    Gui Add, CheckBox, % "xs+20 yp+40 hwndextraLootHelperCkboxID vextraLootHelperCkbox gSetLootHelper Checked" generals.enableloothelper, 快速拾取助手：
+    Gui Add, CheckBox, % "xs+20 yp+40 hwndextraLootHelperCkboxID vextraLootHelperCkbox gSetLootHelper Checked" generals.enableloothelper, 快速拾取助手:
     AddToolTip(extraLootHelperCkboxID, "拾取装备时按下助手快捷键可以自动点击左键")
     Gui Add, Text, vextraLootHelperText x+5 yp, 发送左键次数
     Gui Add, Edit, vextraLootHelperEdit x+10 yp-4 w60 Number
     Gui Add, Updown, vextraLootHelperUpdown Range2-99, % generals.loothelpertimes
 
-    Gui Add, CheckBox, % "xs+20 yp+40 hwndextraSalvageHelperCkboxID vextraSalvageHelperCkbox gSetSalvageHelper Checked" generals.enablesalvagehelper, 铁匠分解助手：
-    Gui Add, DropDownList, % "x+5 yp-4 w180 AltSubmit hwndextraSalvageHelperDropdownID vextraSalvageHelperDropdown gSetSalvageHelper Choose" generals.salvagehelpermethod, 快速分解||一键分解||智能分解||智能分解（留神圣，太古）||智能分解（只留太古）
+    Gui Add, CheckBox, % "xs+20 yp+40 hwndextraSalvageHelperCkboxID vextraSalvageHelperCkbox gSetSalvageHelper Checked" generals.enablesalvagehelper, 铁匠分解助手:
+    Gui Add, DropDownList, % "x+5 yp-4 w180 AltSubmit hwndextraSalvageHelperDropdownID vextraSalvageHelperDropdown gSetSalvageHelper Choose" generals.salvagehelpermethod, 快速分解||一键分解||智能分解||智能分解（留神圣, 太古）||智能分解（只留太古）
     AddToolTip(extraSalvageHelperCkboxID, "分解装备时按下助手快捷键可以自动执行所选择的策略")
-    AddToolTip(extraSalvageHelperDropdownID, "快速分解：按下快捷键即等同于点击鼠标左键+回车`n一键分解：一键分解背包内所有非安全格的装备`n智能分解：同一键分解，但会跳过远古，神圣，太古`n智能分解（留神圣，太古）：只保留神圣，太古装备`n智能分解（只留太古）：只保留太古装备")
+    AddToolTip(extraSalvageHelperDropdownID, "快速分解:按下快捷键即等同于点击鼠标左键+回车`n一键分解:一键分解背包内所有非安全格的装备`n智能分解:同一键分解, 但会跳过远古, 神圣, 太古`n智能分解（留神圣, 太古）:只保留神圣, 太古装备`n智能分解（只留太古）:只保留太古装备")
 
-    Gui Add, CheckBox, % "xs+20 yp+40 hwndextraReforgeHelperCkboxID vextraReforgeHelperCkbox gSetReforgeHelper Checked" generals.enablereforgehelper, 魔盒重铸助手：
-    Gui Add, DropDownList, % "x+5 yp-4 w180 AltSubmit hwndextraReforgeHelperDropdownID vextraReforgeHelperDropdown Choose" generals.reforgehelpermethod, 重铸一次||重铸直到远古，太古||重铸直到太古
-    AddToolTip(extraReforgeHelperCkboxID, "当魔盒打开且在重铸页面时，按下助手快捷键可以自动执行所选择的重铸策略`n***最大重铸次数可以通过配置文件中的maxreforge变量修改***")
-    local strMaxReforge1:= "不停重铸鼠标指针处的装备，直到变为远古或者太古装备，最多重铸" maxreforge "次"
-    local strMaxReforge2:= "不停重铸鼠标指针处的装备，直到变成太古装备，最多重铸" maxreforge "次"
-    AddToolTip(extraReforgeHelperDropdownID, "重铸一次：重铸鼠标指针处的装备一次`n重铸直到远古，太古：" strMaxReforge1 "`n重铸直到太古：" strMaxReforge2 "`n***重铸过程中再次按下助手快捷键可以打断宏！***")
+    Gui Add, CheckBox, % "xs+20 yp+40 hwndextraReforgeHelperCkboxID vextraReforgeHelperCkbox gSetReforgeHelper Checked" generals.enablereforgehelper, 魔盒重铸助手:
+    Gui Add, DropDownList, % "x+5 yp-4 w180 AltSubmit hwndextraReforgeHelperDropdownID vextraReforgeHelperDropdown Choose" generals.reforgehelpermethod, 重铸一次||重铸直到远古, 太古||重铸直到太古
+    AddToolTip(extraReforgeHelperCkboxID, "当魔盒打开且在重铸页面时, 按下助手快捷键可以自动执行所选择的重铸策略`n***最大重铸次数可以通过配置文件中的maxreforge变量修改***")
+    local strMaxReforge1:= "不停重铸鼠标指针处的装备, 直到变为远古或者太古装备, 最多重铸" maxreforge "次"
+    local strMaxReforge2:= "不停重铸鼠标指针处的装备, 直到变成太古装备, 最多重铸" maxreforge "次"
+    AddToolTip(extraReforgeHelperDropdownID, "重铸一次:重铸鼠标指针处的装备一次`n重铸直到远古, 太古:" strMaxReforge1 "`n重铸直到太古:" strMaxReforge2 "`n***重铸过程中再次按下助手快捷键可以打断宏！***")
 
     Gui Add, CheckBox, % "xs+20 yp+40 hwndextraUpgradeHelperCkboxID vextraUpgradeHelperCkbox Checked" generals.enableupgradehelper, 魔盒升级助手
-    AddToolTip(extraUpgradeHelperCkboxID, "当魔盒打开且在升级页面时，按下助手快捷键即自动升级所有非安全格内的稀有（黄色）装备")
+    AddToolTip(extraUpgradeHelperCkboxID, "当魔盒打开且在升级页面时, 按下助手快捷键即自动升级所有非安全格内的稀有（黄色）装备")
 
     Gui Add, CheckBox, % "x+20 yp+0 hwndextraConvertHelperCkboxID vextraConvertHelperCkbox Checked" generals.enableconverthelper, 魔盒转化助手
-    AddToolTip(extraConvertHelperCkboxID, "当魔盒打开且在转化材料页面时，按下助手快捷键即自动使用所有非安全格内的装备进行材料转化")
+    AddToolTip(extraConvertHelperCkboxID, "当魔盒打开且在转化材料页面时, 按下助手快捷键即自动使用所有非安全格内的装备进行材料转化")
 
     Gui Add, CheckBox, % "xs+20 yp+40 hwndextraAbandonHelperCkboxID vextraAbandonHelperCkbox Checked" generals.enableabandonhelper, 一键丢装助手
-    AddToolTip(extraAbandonHelperCkboxID, "当背包栏打开且鼠标指针位于背包栏内时，按下助手快捷键即自动丢弃所有非安全格的物品`n若储物箱（银行）打开且鼠标位于银行格子内时，宏会存储所有非安全格内的物品至储物箱")
+    AddToolTip(extraAbandonHelperCkboxID, "当背包栏打开且鼠标指针位于背包栏内时, 按下助手快捷键即自动丢弃所有非安全格的物品`n若储物箱（银行）打开且鼠标位于银行格子内时, 宏会存储所有非安全格内的物品至储物箱")
 
     Gui Add, CheckBox, % "xs+20 yp+65 vextraSoundonProfileSwitch Checked" generals.enablesoundplay, 快捷键切换配置成功时播放声音
     Gui Add, CheckBox, % "x+20 yp+0 hwndextraSmartPauseID vextraSmartPause Checked" generals.enablesmartpause, 智能暂停
-    AddToolTip(extraSmartPauseID, "开启后，游戏中按tab键可以暂停宏`n回车键，M键，T键会停止宏")
+    AddToolTip(extraSmartPauseID, "开启后, 游戏中按tab键可以暂停宏`n回车键, M键, T键会停止宏")
 
-    Gui Add, CheckBox, % "xs+20 yp+35 vextraCustomStanding gSetCustomStanding Checked" generals.customstanding, 使用自定义强制站立按键：
+    Gui Add, CheckBox, % "xs+20 yp+35 vextraCustomStanding gSetCustomStanding Checked" generals.customstanding, 使用自定义强制站立按键:
     Gui Add, Hotkey, x+5 yp-3 w70 vextraCustomStandingHK gSetCustomStanding, % generals.customstandinghk
 
-    Gui Add, CheckBox, % "xs+20 yp+35 vextraCustomMoving gSetCustomMoving Checked" generals.custommoving, 使用自定义强制移动按键：
+    Gui Add, CheckBox, % "xs+20 yp+35 vextraCustomMoving gSetCustomMoving Checked" generals.custommoving, 使用自定义强制移动按键:
     Gui Add, Hotkey, x+5 yp-3 w70 Limit14 vextraCustomMovingHK gSetCustomMoving, % generals.custommovinghk
 
     startRunHK:=generals.starthotkey
     Gui Font, s10
-    Gui Add, Text, x570 ym+3 +cRed, 战斗宏启动快捷键：
+    Gui Add, Text, x570 ym+3 +cRed, 战斗宏启动快捷键:
     Gui Font, s9
     Gui Add, DropDownList, % "x+5 yp-3 w90 vStartRunDropdown gSetStartRun AltSubmit Choose" generals.startmethod, 鼠标右键||鼠标中键||滚轮向上||滚轮向下||侧键1||侧键2||键盘按键
     Gui Add, Hotkey, x+5 yp w70 vStartRunHKinput gSetStartRun, %startRunHK%
 
-    Gui Add, Text, % "x10 y" MainWindowH-20 " section", 当前激活配置：
+    Gui Add, Text, % "x10 y" MainWindowH-20 " section", 当前激活配置:
     Gui Font, s11
     Gui Add, Text, x+5 ys-4 w300 +cRed vStatuesSkillsetText, % tabsarray[currentProfile]
     Gui Add, Text, x505 yp +cRed hwndCurrentmodeTextID gdummyFunction, % A_SendMode
     Gui Font, s9
-    Gui Add, Text, xp-95 ys hwndSendmodeTextID gdummyFunction, 按键发送模式：
+    Gui Add, Text, xp-95 ys hwndSendmodeTextID gdummyFunction, 按键发送模式:
     AddToolTip(SendmodeTextID, "修改配置文件General区块下的sendmode值来设置按键发送模式")
-    AddToolTip(CurrentmodeTextID, "Event：默认模式，最佳兼容性`nInput：推荐模式，最佳速度但可能会被一些杀毒防护软件屏蔽干扰")
-    Gui Add, Link, x570 ys hwndAboutLinkID, 本项目开源在：<a href="https://github.com/WeijieH/D3keyHelper">https://github.com/WeijieH/D3keyHelper</a>
+    AddToolTip(CurrentmodeTextID, "Event:默认模式, 最佳兼容性`nInput:推荐模式, 最佳速度但可能会被一些杀毒防护软件屏蔽干扰")
+    Gui Add, Link, x570 ys hwndAboutLinkID, 本项目开源在:<a href="https://github.com/WeijieH/D3keyHelper">https://github.com/WeijieH/D3keyHelper</a>
     AddToolTip(AboutLinkID, "别忘了给我一个star哟~ ╰(*°▽°*)╯")
     Return
 }
 
 /*
 在Gui创建完成后行的一些初始化
-参数：
+参数:
     无
-返回：
+返回:
     无
 */
 StartUp(){
@@ -357,9 +358,9 @@ StartUp(){
 
 /*
 设置右下角图标菜单
-参数：
+参数:
     无
-返回：
+返回:
     无
 */
 SetTrayMenu(){
@@ -374,15 +375,15 @@ SetTrayMenu(){
 }
 
 /*
-读取配置文件，无配置文件则返回默认设置
-参数：
-    cfgFileName：文件名
-    tabs：ByRef String，存储由竖线“|”分隔的配置名，用于初始化Tab控件
-    combats：ByRef Array，存储战斗宏相关配置
-    others：ByRef Array，存储额外配置
-    generals：ByRef Array，存储一些通用配置
-返回：
-    上次退出时激活的配置编号，用于初始化Tab控件
+读取配置文件, 无配置文件则返回默认设置
+参数:
+    cfgFileName:文件名
+    tabs:ByRef String, 存储由竖线“|”分隔的配置名, 用于初始化Tab控件
+    combats:ByRef Array, 存储战斗宏相关配置
+    others:ByRef Array, 存储额外配置
+    generals:ByRef Array, 存储一些通用配置
+返回:
+    上次退出时激活的配置编号, 用于初始化Tab控件
 */
 ReadCfgFile(cfgFileName, ByRef tabs, ByRef combats, ByRef others, ByRef generals){
     local
@@ -393,7 +394,7 @@ ReadCfgFile(cfgFileName, ByRef tabs, ByRef combats, ByRef others, ByRef generals
         IniRead, ver, %cfgFileName%, General, version
         if (VERSION != ver)
         {
-            MsgBox, 配置文件版本不匹配，如有错误请删除配置文件并手动配置。
+            MsgBox, 配置文件版本不匹配, 如有错误请删除配置文件并手动配置。
         }
         IniRead, currentProfile, %cfgFileName%, General, activatedprofile, 1
         IniRead, oldsandhelperhk, %cfgFileName%, General, oldsandhelperhk, F5
@@ -510,13 +511,13 @@ ReadCfgFile(cfgFileName, ByRef tabs, ByRef combats, ByRef others, ByRef generals
 
 /*
 保存配置文件
-参数：
-    cfgFileName：文件名
-    tabs：String，由竖线“|”分隔的配置名
-    currentProfile：int， 当前激活的配置页面编号
-    safezone： Array，安全区域的配置int
-    VERSION：int，版本
-返回：
+参数:
+    cfgFileName:文件名
+    tabs:String, 由竖线“|”分隔的配置名
+    currentProfile:int,  当前激活的配置页面编号
+    safezone: Array, 安全区域的配置int
+    VERSION:int, 版本
+返回:
     无
 */
 SaveCfgFile(cfgFileName, tabs, currentProfile, safezone, VERSION){
@@ -637,13 +638,13 @@ SaveCfgFile(cfgFileName, tabs, currentProfile, safezone, VERSION){
 
 /*
 计算当前分辨率下技能buff条最左边像素的坐标
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-    buttonID：int，按钮的ID，最左为1，最右（鼠标右键）为6
-    percent： float，从左计算，取样点在Buff条上位置的百分比
-返回：
-    [x坐标，y坐标]
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+    buttonID:int, 按钮的ID, 最左为1, 最右（鼠标右键）为6
+    percent: float, 从左计算, 取样点在Buff条上位置的百分比
+返回:
+    [x坐标, y坐标]
 */
 getSkillButtonBuffPos(D3W, D3H, buttonID, percent){
     static x:=[1288, 1377, 1465, 1554, 1647, 1734]
@@ -654,11 +655,11 @@ getSkillButtonBuffPos(D3W, D3H, buttonID, percent){
 
 /*
 将16进制的颜色标签转化为RGB array。 FFFFFF -> [255, 255, 255]
-当游戏gamma不为1时，会尝试进行gamma修正。
-参数：
-    vthiscolor：16进制的RGB颜色标签，PixelGetColor直出
-返回：
-    [R，G，B]
+当游戏gamma不为1时, 会尝试进行gamma修正。
+参数:
+    vthiscolor:16进制的RGB颜色标签, PixelGetColor直出
+返回:
+    [R, G, B]
 */
 splitRGB(vthiscolor){
     local
@@ -677,14 +678,14 @@ splitRGB(vthiscolor){
 
 /*
 负责发送技能按键
-参数：
-    currentProfile：int，当前激活的配置编号
+参数:
+    currentProfile:int, 当前激活的配置编号
     nskill: int, 技能按钮编号 1-6
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-    forceStandingKey：强制站立按键
-    useSkillQueue：Bool，是否使用技能列表
-返回：
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+    forceStandingKey:强制站立按键
+    useSkillQueue:Bool, 是否使用技能列表
+返回:
     无
 */
 skillKey(currentProfile, nskill, D3W, D3H, forceStandingKey, useSkillQueue){
@@ -725,10 +726,10 @@ skillKey(currentProfile, nskill, D3W, D3H, forceStandingKey, useSkillQueue){
             {
                 if useSkillQueue
                 {
-                    ; 当技能列表大于1000时什么都不做，防止占用过多内存
+                    ; 当技能列表大于1000时什么都不做, 防止占用过多内存
                     if (skillQueue.Count() < 1000){
                         ; 按键加入技能列表头部
-                        ; [k, 3] k是具体按键，3代表因为连点加入
+                        ; [k, 3] k是具体按键, 3代表因为连点加入
                         skillQueue.InsertAt(1, [k, 3])
                     }
                 }
@@ -787,10 +788,10 @@ skillKey(currentProfile, nskill, D3W, D3H, forceStandingKey, useSkillQueue){
 }
 
 /*
-清空配置文件，并写入默认的文件头
-参数：
-    FileName：配置文件名
-返回：
+清空配置文件, 并写入默认的文件头
+参数:
+    FileName:配置文件名
+返回:
     无
 */
 createOrTruncateFile(FileName){
@@ -801,21 +802,21 @@ createOrTruncateFile(FileName){
     file:=FileOpen(FileName, "w", "UTF-16")
     if !IsObject(file)
     {
-        MsgBox 无法创建或写入文件："%FileName%"
+        MsgBox 无法创建或写入文件:"%FileName%"
         return
     }
     file.Write("; ===============================================`r`n")
     file.Write("; 欢迎来到“老沙”D3按键宏的配置文件。`r`n")
-    file.Write("; 每个非General区块都对应一套按键配置，可以自由增删。`r`n")
+    file.Write("; 每个非General区块都对应一套按键配置, 可以自由增删。`r`n")
     file.Write("; ===============================================`r`n")
     file.Close()
 }
 
 /*
 负责开启助手宏
-参数：
+参数:
     无
-返回：
+返回:
     无
 */
 oldsandHelper(){
@@ -829,7 +830,7 @@ oldsandHelper(){
         Sleep, 200
         Return
     }
-    ; 如果战斗宏开启或者无法获取游戏分辨率，则返回
+    ; 如果战斗宏开启或者无法获取游戏分辨率, 则返回
     if (vRunning or !getGameResulution(D3W, D3H)){
         Return
     }
@@ -844,7 +845,7 @@ oldsandHelper(){
     GuiControlGet, extraAbandonHelperCkbox
     GuiControlGet, extraSalvageHelperDropdown
     GuiControlGet, helperAnimationSpeedDropdown
-    MouseGetPos, xpos, ypos ; 当前鼠标位置，用于宏结束后返回
+    MouseGetPos, xpos, ypos ; 当前鼠标位置, 用于宏结束后返回
     ; 载入预设动画速度
     switch helperAnimationSpeedDropdown
     {
@@ -904,7 +905,7 @@ oldsandHelper(){
                         helperRunning:=False
                         Return
                     }
-                    ; 分解按钮已经按下，右键取消然后重新获得颜色信息
+                    ; 分解按钮已经按下, 右键取消然后重新获得颜色信息
                     Click, Right
                     Sleep, helperDelay
                     p:=getSalvageIconXY(D3W, D3H, "edge")
@@ -912,7 +913,7 @@ oldsandHelper(){
                     r[4]:=getPixelRGB(p[3])
                     r[5]:=getPixelRGB(p[4])
                 }
-                ; [黄分解条件，蓝分解条件，白/灰分解条件]
+                ; [黄分解条件, 蓝分解条件, 白/灰分解条件]
                 _wait:=-1
                 for i, _c in [r[5][1]>50, r[4][3]>65, r[3][1]>65]
                 {
@@ -953,7 +954,7 @@ oldsandHelper(){
                 ; 铁匠页面未打卡 
         }
     }
-    ; 鼠标位置。1：位于背包栏。2：位于储物栏（银行）。-1：其他
+    ; 鼠标位置。1:位于背包栏。2:位于储物栏（银行）。-1:其他
     mousePosition:=-1
     if (xpos>D3W-(3440-2740)*D3H/1440 and ypos>730*D3H/1440 and ypos<1150*D3H/1440)
     {
@@ -1017,12 +1018,12 @@ oldsandHelper(){
 
 /*
 负责一键重铸
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-    xpos：之前鼠标x坐标
-    ypos：之前鼠标y坐标
-返回：
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+    xpos:之前鼠标x坐标
+    ypos:之前鼠标y坐标
+返回:
     无
 */
 oneButtonReforgeHelper(D3W, D3H, xpos, ypos){
@@ -1055,10 +1056,10 @@ oneButtonReforgeHelper(D3W, D3H, xpos, ypos){
             ;右键把装备再次放入魔盒
             MouseMove, xpos, ypos
             Click, Right
-            ;鼠标移动到魔盒第一个格子位置，然后等待动画完毕
+            ;鼠标移动到魔盒第一个格子位置, 然后等待动画完毕
             MouseMove, box_1_1[1], box_1_1[2]
             Sleep, helperDelay//2
-            ;条件重铸，需要判断重铸后的装备品质
+            ;条件重铸, 需要判断重铸后的装备品质
             c_t:=[-255,-255,-255]
             StartTime1:=A_TickCount
             while (A_TickCount-StartTime1<=helperDelay)
@@ -1066,7 +1067,7 @@ oneButtonReforgeHelper(D3W, D3H, xpos, ypos){
                 ; 获取三个位于边框上的点颜色
                 c:=getPixelsRGB(box_1_2[3]+1, box_1_2[2], 3, 1, "Max", False)
                 if (c_t[1]=c[1] and c_t[2]=c[2] and c_t[3]=c[3]){
-                    ; 当取色点颜色停止变化，动画显示完毕
+                    ; 当取色点颜色停止变化, 动画显示完毕
                     Break
                 }
                 c_t:=c
@@ -1086,13 +1087,13 @@ oneButtonReforgeHelper(D3W, D3H, xpos, ypos){
             MouseMove, xpos, ypos
             if (q > extraReforgeHelperDropdown)
             {
-                ;品质符合结束条件，退出
+                ;品质符合结束条件, 退出
                 Break
             }
         }
         Else
         {
-            ;重铸一次，直接退出
+            ;重铸一次, 直接退出
             Break
         }
     }
@@ -1104,12 +1105,12 @@ oneButtonReforgeHelper(D3W, D3H, xpos, ypos){
 
 /*
 负责一键升级稀有或转化材料
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-    xpos：之前鼠标x坐标
-    ypos：之前鼠标y坐标
-返回：
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+    xpos:之前鼠标x坐标
+    ypos:之前鼠标y坐标
+返回:
     无
 */
 oneButtonUpgradeConvertHelper(D3W, D3H, xpos, ypos)
@@ -1136,7 +1137,7 @@ oneButtonUpgradeConvertHelper(D3W, D3H, xpos, ypos)
         switch helperBagZone[i]
         {
             case -1:
-                ; 还未探开，继续等待
+                ; 还未探开, 继续等待
                 Sleep, 20
             case 10:
                 ; 格子有装备
@@ -1147,10 +1148,10 @@ oneButtonUpgradeConvertHelper(D3W, D3H, xpos, ypos)
                 ; 右键装备送进卡奈魔盒
                 MouseMove, m[1], m[2]
                 Click, Right
-                ; 如果格子不在最后一行，并且下方有装备或者下方未探开
+                ; 如果格子不在最后一行, 并且下方有装备或者下方未探开
                 if (i<=50 and (helperBagZone[i+10]=-1 or helperBagZone[i+10]=10))
                 {
-                    ; 当前装备可能是占用2个格子的大型装备，提前取出下方格子的中心像素
+                    ; 当前装备可能是占用2个格子的大型装备, 提前取出下方格子的中心像素
                     pLargeItem:=True
                     cd_before:=getPixelRGB(m2)
                 }
@@ -1172,17 +1173,17 @@ oneButtonUpgradeConvertHelper(D3W, D3H, xpos, ypos)
                 Sleep, helperDelay+50
                 if (pLargeItem)
                 {
-                    ; 当前装备可能是大型装备，检查下方格子中心像素有没有一起变色
+                    ; 当前装备可能是大型装备, 检查下方格子中心像素有没有一起变色
                     cd_after:=getPixelRGB(m2)
                     if !isArraysEqual(cd_before, cd_after, 3)
                     {
-                        ; 如果变色，即当前装备是大型装备，标记下方格子未非装备格
+                        ; 如果变色, 即当前装备是大型装备, 标记下方格子未非装备格
                         helperBagZone[i+10]:=5
                     }
                 }
                 i++
             Default:
-                ; 跳过无装备，或者非装备格
+                ; 跳过无装备, 或者非装备格
                 i++
         }
     }
@@ -1194,9 +1195,9 @@ oneButtonUpgradeConvertHelper(D3W, D3H, xpos, ypos)
 
 /*
 负责一键赌博（连按右键）
-参数：
+参数:
     无
-返回：
+返回:
     无
 */
 gambleHelper(){
@@ -1217,18 +1218,18 @@ gambleHelper(){
 
 /*
 负责一键拾取（连按左键）
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-    helperDelay：按键延迟
-返回：
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+    helperDelay:按键延迟
+返回:
     无
 */
 lootHelper(D3W, D3H, helperDelay){
     local
     Global helperBreak, helperRunning
     MouseGetPos, xpos, ypos
-    ; 如果鼠标在人物周围，连点左键
+    ; 如果鼠标在人物周围, 连点左键
     if (Abs(xpos - D3W/2)<600*1440/D3H and Abs(ypos - D3H/2)<500*1440/D3H)
     {
         GuiControlGet, extraLootHelperEdit
@@ -1251,11 +1252,11 @@ lootHelper(D3W, D3H, helperDelay){
 
 /*
 负责快速分解（左键+回车）
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-    helperDelay：按键延迟
-返回：
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+    helperDelay:按键延迟
+返回:
     无
 */
 quickSalvageHelper(D3W, D3H, helperDelay){
@@ -1269,12 +1270,12 @@ quickSalvageHelper(D3W, D3H, helperDelay){
 
 /*
 负责一键分解
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-    xpos：之前鼠标x坐标
-    ypos：之前鼠标y坐标
-返回：
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+    xpos:之前鼠标x坐标
+    ypos:之前鼠标y坐标
+返回:
     无
 */
 oneButtonSalvageHelper(D3W, D3H, xpos, ypos){
@@ -1287,7 +1288,7 @@ oneButtonSalvageHelper(D3W, D3H, xpos, ypos){
     fn1:=Func("scanInventorySpaceGDIP").Bind(D3W, D3H)
     SetTimer, %fn1%, -1
 
-    q:=0    ; 当前格子装备品质，2：普通传奇，3：远古传奇，4：神圣装备，5：太古传奇
+    q:=0    ; 当前格子装备品质, 2:普通传奇, 3:远古传奇, 4:神圣装备, 5:太古传奇
     i:=1    ; 当前格子ID
     w:=0
     SetDefaultMouseSpeed, mouseDelay
@@ -1319,7 +1320,7 @@ oneButtonSalvageHelper(D3W, D3H, xpos, ypos){
                         ; 获取三个位于边框上的点颜色
                         c:=getPixelsRGB(Round(m[3]-1-10*D3H/1440), m[2], 3, 1, "Max", False)
                         if (c_t[1]=c[1] and c_t[2]=c[2] and c_t[3]=c[3]){
-                            ; 当取色点颜色停止变化，动画显示完毕
+                            ; 当取色点颜色停止变化, 动画显示完毕
                             Break
                         }
                         c_t:=c
@@ -1338,7 +1339,7 @@ oneButtonSalvageHelper(D3W, D3H, xpos, ypos){
                 }
                 if (i<=50 and (helperBagZone[i+10]=10 or helperBagZone[i+10]=-1))
                 {
-                    ; 如果不是最后一行，且下方格子有装备，判断下方格子边缘的颜色是否改变
+                    ; 如果不是最后一行, 且下方格子有装备, 判断下方格子边缘的颜色是否改变
                     md:=getInventorySpaceXY(D3W, D3H, i+10, "bag")
                     c_b:=cInventorySpace[i+10]
                     c_t:=[-255,-255,-255]
@@ -1347,18 +1348,18 @@ oneButtonSalvageHelper(D3W, D3H, xpos, ypos){
                     {
                         c_a:=getPixelRGB([Round(md[3]+_spaceSizeInnerW*0.08*D3H/1440), Round(md[4]+_spaceSizeInnerH*0.7*D3H/1440)])
                         if (c_t[1]=c_a[1] and c_t[2]=c_a[2] and c_t[3]=c_a[3]){
-                            ; 当取色点颜色停止变化，动画显示完毕
+                            ; 当取色点颜色停止变化, 动画显示完毕
                             Break
                         }
                         c_t:=c_a
                     }
                     if !(c_b[1]=c_a[1] and c_b[2]=c_a[2] and c_b[3]=c_a[3]){
-                        ; 若改变，则当前格子装备为占用2个格子的大型装备，标记下方格子为非装备格子
+                        ; 若改变, 则当前格子装备为占用2个格子的大型装备, 标记下方格子为非装备格子
                         helperBagZone[i+10]:=5
                     }
                 }
                 if (q>=extraSalvageHelperDropdown) {
-                    ; 如果品质达标，跳过当前格子
+                    ; 如果品质达标, 跳过当前格子
                     i++
                     Continue
                 }
@@ -1405,12 +1406,12 @@ oneButtonSalvageHelper(D3W, D3H, xpos, ypos){
 
 /*
 负责一键丢装备
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-    xpos：之前鼠标x坐标
-    ypos：之前鼠标y坐标
-    mousePosition：鼠标位置标记。1：背包栏，2：银行。
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+    xpos:之前鼠标x坐标
+    ypos:之前鼠标y坐标
+    mousePosition:鼠标位置标记。1:背包栏, 2:银行。
 */
 oneButtonAbandonHelper(D3W, D3H, xpos, ypos, mousePosition){
     local
@@ -1444,7 +1445,7 @@ oneButtonAbandonHelper(D3W, D3H, xpos, ypos, mousePosition){
                     stashOpen:=isStashOpen(D3W, D3H)
                     if (stashOpen=0 and mousePosition!=1)
                     {
-                        ; 如果银行未打开且鼠标不在背包栏内，则退出
+                        ; 如果银行未打开且鼠标不在背包栏内, 则退出
                         Break
                     }
                 }
@@ -1497,11 +1498,11 @@ oneButtonAbandonHelper(D3W, D3H, xpos, ypos, mousePosition){
 }
 
 /*
-扫描所有背包格子。未扫描-1，安全格0，没东西1，有东西10
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-返回：
+扫描所有背包格子。未扫描-1, 安全格0, 没东西1, 有东西10
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+返回:
     无
 */
 scanInventorySpaceGDIP(D3W, D3H){
@@ -1550,10 +1551,10 @@ scanInventorySpaceGDIP(D3W, D3H){
 
 /*
 负责快速暂停
-参数：
+参数:
     pausetime: int, 暂停的时间
-    pauseAction：int，暂停的方式
-返回：
+    pauseAction:int, 暂停的方式
+返回:
     无
 */
 clickPauseMarco(pausetime, pauseAction){
@@ -1619,9 +1620,9 @@ clickPauseMarco(pausetime, pauseAction){
 
 /*
 设置宏启动模式的相关控件动画
-参数：
+参数:
     无
-返回：
+返回:
     无
 */
 SetStartMode(){
@@ -1655,9 +1656,9 @@ SetStartMode(){
 
 /*
 设置按键队列警告和提示消息
-参数：
+参数:
     无
-返回：
+返回:
     无
 */
 SetSkillQueueWarning(){
@@ -1681,9 +1682,9 @@ SetSkillQueueWarning(){
         if (_in>_out)
         {
             GuiControl, Show, skillset%currentProfile%skillqueuewarningtext
-            _s:=Format("当前按键配置每秒向队列中填入{:.2f}个“连点”技能，但却只取出{:.2f}个", _in, _out)
+            _s:=Format("当前按键配置每秒向队列中填入{:.2f}个“连点”技能, 但却只取出{:.2f}个", _in, _out)
             GuiControlGet, _hwnd, Hwnd, skillset%currentProfile%skillqueuewarningtext
-            AddToolTip(_hwnd, _s "`n你应当把buff类技能设置为“保持buff”而不是“连点”`n或者你需要增加”连点“的执行间隔，再或者减少按键队列的发送间隔", 30000, True)
+            AddToolTip(_hwnd, _s "`n你应当把buff类技能设置为“保持buff”而不是“连点”`n或者你需要增加”连点“的执行间隔, 再或者减少按键队列的发送间隔", 30000, True)
         }
         Else
         {
@@ -1699,9 +1700,9 @@ SetSkillQueueWarning(){
 
 /*
 设置自定义强制站立按键相关的控件动画
-参数：
+参数:
     无
-返回：
+返回:
     无
 */
 SetCustomStanding(){
@@ -1724,9 +1725,9 @@ SetCustomStanding(){
 
 /*
 设置自定义强制移动按键相关的控件动画
-参数：
+参数:
     无
-返回：
+返回:
     无
 */
 SetCustomMoving(){
@@ -1749,9 +1750,9 @@ SetCustomMoving(){
 
 /*
 设置赌博助手相关的控件动画
-参数：
+参数:
     无
-返回：
+返回:
     无
 */
 SetGambleHelper(){
@@ -1771,9 +1772,9 @@ SetGambleHelper(){
 
 /*
 设置拾取助手相关的控件动画
-参数：
+参数:
     无
-返回：
+返回:
     无
 */
 SetLootHelper(){
@@ -1794,9 +1795,9 @@ SetLootHelper(){
 
 /*
 设置重铸助手相关的控件动画
-参数：
+参数:
     无
-返回：
+返回:
     无
 */
 SetReforgeHelper(){
@@ -1815,9 +1816,9 @@ SetReforgeHelper(){
 
 /*
 设置分解助手相关的控件动画
-参数：
+参数:
     无
-返回：
+返回:
     无
 */
 SetSalvageHelper(){
@@ -1835,7 +1836,7 @@ SetSalvageHelper(){
             case 1:
                 GuiControl, hide, helperSafeZoneText
             case 2,3,4,5:
-                ; 如果是一键分解，检查安全区域设置
+                ; 如果是一键分解, 检查安全区域设置
                 hasSafeZone:=False
                 Loop, 60
                 {
@@ -1869,9 +1870,9 @@ SetSalvageHelper(){
 
 /*
 设置技能队列相关的控件动画
-参数：
+参数:
     无
-返回：
+返回:
     无
 */
 SetSkillQueue(){
@@ -1895,9 +1896,9 @@ SetSkillQueue(){
 
 /*
 设置发送技能队列按键
-参数：
-    inv：int，技能队列延迟
-返回：
+参数:
+    inv:int, 技能队列延迟
+返回:
     无
 */
 spamSkillQueue(inv){
@@ -1908,7 +1909,7 @@ spamSkillQueue(inv){
         ; 取出排在第一的按键
         _k:=skillQueue.RemoveAt(1)
         k:=_k[1]
-        ; 如果是连点，按键前后停止一段时间，并且放开所有按住不放的按键
+        ; 如果是连点, 按键前后停止一段时间, 并且放开所有按住不放的按键
         if (_k[2]=3){
             for key, value in keysOnHold{
                 if GetKeyState(key){
@@ -1945,10 +1946,10 @@ spamSkillQueue(inv){
 
 /*
 判断屏幕上是否有对话框
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-返回：
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+返回:
     bool
 */
 isDialogBoXOnScreen(D3W, D3H){
@@ -1969,13 +1970,13 @@ isDialogBoXOnScreen(D3W, D3H){
 
 /*
 获取背包格子的坐标
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-    ID：int，格子的编号
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+    ID:int, 格子的编号
     zone: string, 基于背包区域或者卡纳魔盒
-返回：
-    [格子中心x，格子中心y，格子左上角x，格子左上角y]
+返回:
+    [格子中心x, 格子中心y, 格子左上角x, 格子左上角y]
 */
 getInventorySpaceXY(D3W, D3H, ID, zone){
     static _spaceSizeInnerW:=64
@@ -2004,13 +2005,13 @@ getInventorySpaceXY(D3W, D3H, ID, zone){
 
 /*
 判断铁匠/分解页面是否开启
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-返回：
-    [0]：如果没有开启
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+返回:
+    [0]:如果没有开启
     [1]: 如果铁匠页面开启但拆解页面没开启
-    [2, 大拆解按钮边缘坐标rgb, 白色解按钮边缘坐标rgb, 蓝色解按钮边缘坐标rgb, 黄色解按钮边缘坐标rgb]：如果铁匠开启且同时在拆解页面
+    [2, 大拆解按钮边缘坐标rgb, 白色解按钮边缘坐标rgb, 蓝色解按钮边缘坐标rgb, 黄色解按钮边缘坐标rgb]:如果铁匠开启且同时在拆解页面
 */
 isSalvagePageOpen(D3W, D3H){
     c1:=getPixelRGB([Round(339*D3H/1440),Round(80*D3H/1440)])
@@ -2036,15 +2037,15 @@ isSalvagePageOpen(D3W, D3H){
 
 /*
 判断卡奈魔盒页面是否开启
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-返回：
-    0：卡奈魔盒没有开启
-    1：卡奈魔盒开启但页面未知
-    2：卡奈魔盒开启，且开启了重铸界面
-    3：卡奈魔盒开启，且开启了升级界面
-    4：卡奈魔盒开启，且开启了材料转化界面
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+返回:
+    0:卡奈魔盒没有开启
+    1:卡奈魔盒开启但页面未知
+    2:卡奈魔盒开启, 且开启了重铸界面
+    3:卡奈魔盒开启, 且开启了升级界面
+    4:卡奈魔盒开启, 且开启了材料转化界面
 */
 isKanaiCubeOpen(D3W, D3H){
     c1:=getPixelRGB([Round(353*D3H/1440),Round(85*D3H/1440)])
@@ -2060,7 +2061,7 @@ isKanaiCubeOpen(D3W, D3H){
         }
         else
         {
-            ; 检测是否是非英文客户端，设置Y轴位置偏移
+            ; 检测是否是非英文客户端, 设置Y轴位置偏移
             WinGetTitle, gameWindowTitle, ahk_class D3 Main Window Class
             upgradeYOffset:=(gameWindowTitle="Diablo III")? 0:-22
             cc1:=getPixelRGB([Round(799*D3H/1440),Round((406+upgradeYOffset)*D3H/1440)])
@@ -2086,12 +2087,12 @@ isKanaiCubeOpen(D3W, D3H){
 
 /*
 获得拆解页面4个按钮的坐标
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-    c: string，“center”-中心坐标，“edge”-边缘颜色带内坐标
-返回：
-    [大拆解按钮坐标xy，白色解按钮坐标xy，蓝色解按钮坐标xy，黄色解按钮坐标xy]
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+    c: string, “center”-中心坐标, “edge”-边缘颜色带内坐标
+返回:
+    [大拆解按钮坐标xy, 白色解按钮坐标xy, 蓝色解按钮坐标xy, 黄色解按钮坐标xy]
 */
 getSalvageIconXY(D3W, D3H, c){
     switch c
@@ -2113,10 +2114,10 @@ getSalvageIconXY(D3W, D3H, c){
 
 /*
 判断赌博页面是否开启
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-返回：
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+返回:
     Bool
 */
 isGambleOpen(D3W, D3H){
@@ -2134,10 +2135,10 @@ isGambleOpen(D3W, D3H){
 
 /*
 判断物品栏页面是否开启
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-返回：
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+返回:
     Bool
 */
 isInventoryOpen(D3W, D3H){
@@ -2156,10 +2157,10 @@ isInventoryOpen(D3W, D3H){
 
 /*
 判断储物箱页面是否开启
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-返回：
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+返回:
     Bool
 */
 isStashOpen(D3W, D3H){
@@ -2177,13 +2178,13 @@ isStashOpen(D3W, D3H){
 
 /*
 判断格子是否为空
-参数：
-    D3W：int，窗口区域的宽度
-    D3H：int，窗口区域的高度
-    ID：int，格子编号
-    ckpoints：object，要检查的位置的xy百分比list
-    zone：string，基于背包区域或者卡奈魔盒
-返回：
+参数:
+    D3W:int, 窗口区域的宽度
+    D3H:int, 窗口区域的高度
+    ID:int, 格子编号
+    ckpoints:object, 要检查的位置的xy百分比list
+    zone:string, 基于背包区域或者卡奈魔盒
+返回:
     Bool
 */
 isInventorySpaceEmpty(D3W, D3H, ID, ckpoints, zone){
@@ -2216,11 +2217,11 @@ isInventorySpaceEmpty(D3W, D3H, ID, ckpoints, zone){
 
 /*
 把游戏内画面坐标转化为屏幕坐标
-参数：
-    GameX：X坐标
-    GameY：Y坐标
-返回：
-    如果成功，返回对应的屏幕坐标
+参数:
+    GameX:X坐标
+    GameY:Y坐标
+返回:
+    如果成功, 返回对应的屏幕坐标
 */
 getGameXYonScreen(GameX, GameY){
     VarSetCapacity(POINT, 8)
@@ -2232,10 +2233,10 @@ getGameXYonScreen(GameX, GameY){
 
 /*
 获取游戏的当前分辨率
-参数：
-    ByRef D3W：分辨率宽
-    ByRef D3H：分辨率高
-返回：
+参数:
+    ByRef D3W:分辨率宽
+    ByRef D3H:分辨率高
+返回:
     获取分辨率是否成功
 */
 getGameResulution(ByRef D3W, ByRef D3H){
@@ -2248,7 +2249,7 @@ getGameResulution(ByRef D3W, ByRef D3H){
         D3W:=NumGet(rect, 8, "Int")
         D3H:=NumGet(rect, 12, "Int")
         if (D3W*D3H=0 and d3only){
-            MsgBox, % Format("无法获取到你的游戏分辨率，错误代码：0x{:X}，请尝试切换至窗口模式运行游戏。", A_LastError)
+            MsgBox, % Format("无法获取到你的游戏分辨率, 错误代码:0x{:X}, 请尝试切换至窗口模式运行游戏。", A_LastError)
             Return False
         }
     }
@@ -2263,11 +2264,11 @@ getGameResulution(ByRef D3W, ByRef D3H){
 
 /*
 获取卡奈和放入材料按钮位置
-参数：
-    D3W：分辨率宽
-    D3H：分辨率高
-返回：
-    [转化按钮xy，放入材料按钮xy，上一页xy，下一页xy]
+参数:
+    D3W:分辨率宽
+    D3H:分辨率高
+返回:
+    [转化按钮xy, 放入材料按钮xy, 上一页xy, 下一页xy]
 */
 getKanaiCubeButtonPos(D3W, D3H){
     point1:=[Round(320*D3H/1440),Round(1105*D3H/1440)]
@@ -2279,10 +2280,10 @@ getKanaiCubeButtonPos(D3W, D3H){
 
 /*
 获取指定像素点的RGB值
-参数：
-    point：点坐标
-返回：
-    [R，G，B]
+参数:
+    point:点坐标
+返回:
+    [R, G, B]
 */
 getPixelRGB(point){
     PixelGetColor, cpixel, point[1], point[2], rgb
@@ -2292,15 +2293,15 @@ getPixelRGB(point){
 
 /*
 获取多个像素点聚合后的RGB值
-参数：
-    pointX, pointY：起始点坐标
-    w：宽度
-    h：高度
-    agg_func：用于聚合的函数名字
-    gdip：是否用GDI+库获取像素颜色
-    gameX，gameY：游戏窗口0，0点对应的屏幕坐标
-返回：
-    [R，G，B]
+参数:
+    pointX, pointY:起始点坐标
+    w:宽度
+    h:高度
+    agg_func:用于聚合的函数名字
+    gdip:是否用GDI+库获取像素颜色
+    gameX, gameY:游戏窗口0, 0点对应的屏幕坐标
+返回:
+    [R, G, B]
 */
 getPixelsRGB(pointX, pointY, w, h, agg_func, gdip=False, gameX=0, gameY=0){
     cpixelR:=[]
@@ -2345,10 +2346,10 @@ getPixelsRGB(pointX, pointY, w, h, agg_func, gdip=False, gameX=0, gameY=0){
 
 /*
 转化Object的所有key为字符串
-参数：
-    sep：分隔符
-    dict：输入的字典
-返回：
+参数:
+    sep:分隔符
+    dict:输入的字典
+返回:
     String
 */
 keyJoin(sep, dict){
@@ -2359,12 +2360,12 @@ keyJoin(sep, dict){
 
 /*
 检查数组中是否有指定数值
-参数：
-    haystack：要检查的数组
-    needle：要检查的数值
-返回：
-    0：找不到
-    index：找到
+参数:
+    haystack:要检查的数组
+    needle:要检查的数值
+返回:
+    0:找不到
+    index:找到
 */
 HasVal(haystack, needle) {
     for index, value in haystack
@@ -2377,10 +2378,10 @@ HasVal(haystack, needle) {
 
 /*
 快速创建一个一维数组
-参数：
-    len：数组大小
-    fill：填入数值，默认为0
-返回：
+参数:
+    len:数组大小
+    fill:填入数值, 默认为0
+返回:
     一维数组
 */
 make1DArray(len, fill=0){
@@ -2394,10 +2395,10 @@ make1DArray(len, fill=0){
 
 /*
 检查两个数组是否相等
-参数：
-    arrayA, arrayB：要检查的两个数组
-    _t：允许的误差范围，默认为0
-返回：
+参数:
+    arrayA, arrayB:要检查的两个数组
+    _t:允许的误差范围, 默认为0
+返回:
     一维数组
 */
 isArraysEqual(arrayA, arrayB, _t=0){
@@ -2417,10 +2418,10 @@ isArraysEqual(arrayA, arrayB, _t=0){
 }
 
 /*
-一个空方程，用于绑定Text控件的gLabel从而使tooltip可以工作
-参数：
+一个空方程, 用于绑定Text控件的gLabel从而使tooltip可以工作
+参数:
     无
-返回：
+返回:
     无
 */
 dummyFunction(){
@@ -2429,10 +2430,10 @@ dummyFunction(){
 
 /*
 为picture控件填充颜色
-参数：
-    HWNDs：控件的句柄
-    HexColor：要填充的颜色
-返回：
+参数:
+    HWNDs:控件的句柄
+    HexColor:要填充的颜色
+返回:
     无
 */
 FillPixel(HWNDs, HexColor) {
@@ -2455,10 +2456,10 @@ FillPixel(HWNDs, HexColor) {
 
 /*
 从B64字符串创建位图或图标
-参数：
-    B64：图片字符串
-    IsIcon：是否创建图标而不是位图，默认为否
-返回：
+参数:
+    B64:图片字符串
+    IsIcon:是否创建图标而不是位图, 默认为否
+返回:
     位图或者图标的句柄
 */
 GdipCreateFromBase64(B64, IsIcon := 0){
@@ -2482,13 +2483,13 @@ GdipCreateFromBase64(B64, IsIcon := 0){
 
 /*
 为控件添加tooltip
-修改自：https://gist.github.com/andreberg/55d003569f0564cd8695
-参数：
-    con：控件的hwnd
-    text：tooltip字符串
+修改自:https://gist.github.com/andreberg/55d003569f0564cd8695
+参数:
+    con:控件的hwnd
+    text:tooltip字符串
     duration: tooltip的持续时间
-    Modify：为1则修改一个已创建的tooltip
-返回：
+    Modify:为1则修改一个已创建的tooltip
+返回:
     无
 */
 AddToolTip(con, text, duration=30000, Modify=0){
@@ -2601,11 +2602,11 @@ objectSort(obj, keyName="", callbackFunc="", reverse=false)
 }
 
 /*
-windows钩子callback函数，监控当前窗口，处理标题栏颜色
-修改自：https://www.autohotkey.com/boards/viewtopic.php?t=32532
-参数：
+windows钩子callback函数, 监控当前窗口, 处理标题栏颜色
+修改自:https://www.autohotkey.com/boards/viewtopic.php?t=32532
+参数:
     windows callback
-返回：
+返回:
     无
 */
 Watchdog(wParam, lParam){
@@ -2657,9 +2658,9 @@ Watchdog(wParam, lParam){
 
 /*
 鼠标钩子callback
-参数：
+参数:
     https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms644986(v=vs.85)
-返回：
+返回:
     https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms644986(v=vs.85)
 */
 MouseMove(nCode, wParam, lParam)
@@ -2714,7 +2715,7 @@ MouseMove(nCode, wParam, lParam)
                         }
                 }
             case 0x201,0x204:
-                ; 左键，右键按下
+                ; 左键, 右键按下
                 if (currentControlUnderMouse=UIRightButtonID)
                 {
                     GuiControl,, % UIRightButtonID, % "HBITMAP:*" hBMPButtonClose_Pressed
@@ -2726,7 +2727,7 @@ MouseMove(nCode, wParam, lParam)
                     LeftButtonState:=2
                 }
             case 0x202,0x205:
-                ; 左键，右键弹起
+                ; 左键, 右键弹起
                 switch currentControlUnderMouse
                 {
                     case UIRightButtonID:
@@ -2736,7 +2737,7 @@ MouseMove(nCode, wParam, lParam)
                         }
                         Else
                         {
-                            ; 必须使用SetTimer函数另起一“线程”退出程序，直接在Hook Callback函数内退出会引起钩子链断裂，鼠标失去响应。
+                            ; 必须使用SetTimer函数另起一“线程”退出程序, 直接在Hook Callback函数内退出会引起钩子链断裂, 鼠标失去响应。
                             SetTimer, GuiExit, -1
                         }
                     case UILeftButtonID:
@@ -2769,11 +2770,11 @@ MouseMove(nCode, wParam, lParam)
 
 /*
 以指定大小显示主窗口
-参数：
-    windowSizeW：主窗口宽
-    windowSizeH：主窗口高
-    _redraw：是否重绘整个窗体
-返回：
+参数:
+    windowSizeW:主窗口宽
+    windowSizeH:主窗口高
+    _redraw:是否重绘整个窗体
+返回:
     无
 */
 showMainWindow(windowSizeW, windowSizeH){
@@ -2890,7 +2891,7 @@ SetHelperKeybinding:
     }
 Return
 
-; 设置配置的快速切换功能，以及相关控件动画
+; 设置配置的快速切换功能, 以及相关控件动画
 SetProfileKeybinding:
     Gui, Submit, NoHide
     mouseKeyArray:=["", "MButton", "WheelUp", "WheelDown", "XButton1", "XButton2", ""]
@@ -3252,7 +3253,7 @@ Return
     }
 Return
 
-; 重映射小键盘按键，防止按住shift时无效的问题
+; 重映射小键盘按键, 防止按住shift时无效的问题
 NumpadIns::Numpad0
 NumpadEnd::Numpad1
 NumpadDown::Numpad2
